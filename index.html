@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuadrante de Sustituciones</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <div id="modalEdicionCelda" class="modal-edicion">
+        <div class="modal-contenido">
+            <div class="modal-header">
+                <h3>Editar Celda</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-opciones">
+                <div class="opcion-grupo">
+                    <h4>Estado de la celda</h4>
+                    <div class="radio-group">
+                        <label><input type="radio" name="estado" value="Libre"> Libre</label>
+                        <label><input type="radio" name="estado" value="Clase"> Clase</label>
+                        <label><input type="radio" name="estado" value="Apoyo"> Apoyo</label>
+                        <label><input type="radio" name="estado" value="No disponible"> No disponible</label>
+                    </div>
+                </div>
+
+                <div id="opcionesClase" class="opcion-grupo">
+                    <h4>Opciones de Clase</h4>
+                    <div class="radio-group">
+                        <label><input type="radio" name="etapa-clase" value="Primaria" checked> Primaria</label>
+                        <label><input type="radio" name="etapa-clase" value="Infantil"> Infantil</label>
+                    </div>
+                    <div class="nivel-selector" style="margin: 10px 0;">
+                    </div>
+                    <div class="grupo-selector" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <button class="grupo-btn selected" data-grupo="ninguno">Sin grupo</button>
+                        <button class="grupo-btn" data-grupo="A">A</button>
+                        <button class="grupo-btn" data-grupo="B">B</button>
+                    </div>
+                    <div class="asignaturas-grid" style="display: flex; flex-direction: column; gap: 5px;">
+                        <div class="asignaturas-row" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;">
+                            <button class="asignatura-btn" data-asignatura="Lengua">Lengua</button>
+                            <button class="asignatura-btn" data-asignatura="Matemáticas">Matemáticas</button>
+                            <button class="asignatura-btn" data-asignatura="Robótica">Robótica</button>
+                            <button class="asignatura-btn" data-asignatura="Valores">Valores</button>
+                        </div>
+                        <div class="asignaturas-row" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;">
+                            <button class="asignatura-btn" data-asignatura="Natural SC">Natural SC</button>
+                            <button class="asignatura-btn" data-asignatura="Social SC">Social SC</button>
+                            <button class="asignatura-btn" data-asignatura="Inglés">Inglés</button>
+                            <button class="asignatura-btn" data-asignatura="Plástica">Plástica</button>
+                        </div>
+                        <div class="asignaturas-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px;">
+                            <button class="asignatura-btn" data-asignatura="EF">EF</button>
+                            <button class="asignatura-btn" data-asignatura="Música">Música</button>
+                            <button class="asignatura-btn" data-asignatura="Religión">Religión</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="opcionesApoyo" class="opcion-grupo" style="display: none;">
+                    <h4>Nivel de Apoyo</h4>
+                    <div class="radio-group">
+                        <label><input type="radio" name="etapa-apoyo" value="Primaria" checked> Primaria</label>
+                        <label><input type="radio" name="etapa-apoyo" value="Infantil"> Infantil</label>
+                    </div>
+                    <div class="nivel-selector" style="margin: 10px 0;">
+                    </div>
+                    <div class="grupo-selector" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <button class="grupo-btn selected" data-grupo="ninguno">Sin grupo</button>
+                        <button class="grupo-btn" data-grupo="A">A</button>
+                        <button class="grupo-btn" data-grupo="B">B</button>
+                    </div>
+                    <div class="apoyo-asignatura-selector" style="margin-top: 10px; display: none;">
+                        <h5 style="font-size: 0.85em; color: #444; margin-top: 8px; margin-bottom: 6px;">Asignatura Específica del Apoyo (Primaria):</h5>
+                        <div class="asignaturas-apoyo-primaria-grid" style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 5px;">
+                            <button class="apoyo-asignatura-btn selected" data-apoyo-asignatura="Matemáticas">Matemáticas</button>
+                            <button class="apoyo-asignatura-btn" data-apoyo-asignatura="Lengua">Lengua</button>
+                            <button class="apoyo-asignatura-btn" data-apoyo-asignatura="Inglés">Inglés</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="opcionesNoDisponible" class="opcion-grupo" style="display: none;">
+                    <h4>Motivo</h4>
+                    <input type="text" class="input-asignatura" placeholder="Motivo de no disponibilidad">
+                </div>
+            </div>
+            <div class="modal-botones">
+                <button class="btn-cancelar">Cancelar</button>
+                <button class="btn-guardar">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="page-banner-header">
+            <img src="Logo Laura 2.jpg" alt="Logo Colegio" id="schoolLogo" />
+            <h1>Cuadrante de Sustituciones</h1>
+        </header>
+
+        <div class="app-header">
+            <div class="input-group">
+                <label for="periodoActivoSelect">Periodo Lectivo Activo:</label>
+                <select id="periodoActivoSelect"></select>
+            </div>
+        </div>
+
+        <div class="tab-navigation">
+            <button class="tab-button active" data-tab="sustitucionesTab">Sustituciones</button>
+            <button class="tab-button" data-tab="horariosTab">Horarios y Gestión</button>
+            <button class="tab-button" data-tab="historialTab">Historial de Tablas</button>
+        </div>
+
+        <div id="sustitucionesTab" class="tab-content active">
+            <div class="seccion">
+                <h2>1. Asignación de Sustituciones</h2>
+
+                <div class="input-group">
+                    <label for="diaSelect">Día de las Ausencias:</label>
+                    <div class="calendar-wrapper">
+                        <input type="text" id="fechaInput" readonly placeholder="Selecciona fecha..." style="cursor: pointer;">
+                        <select id="diaSelect" style="display: none;"></select>
+                        <div id="calendarPopup" class="calendar-popup">
+                            <div class="calendar-header">
+                                <button id="prevMonth">&lt;</button>
+                                <span id="currentMonth"></span>
+                                <button id="nextMonth">&gt;</button>
+                            </div>
+                            <div class="calendar-grid">
+                                <div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+
+                <div id="contenedorDefinicionesAusencia">
+                    </div>
+
+                <button id="btnAnadirAusencia" style="margin-bottom: 20px; background-color: #5cb85c;">+ Añadir Otra Ausencia de Docente</button>
+
+                <hr style="border-top: 2px solid #fdc08e; margin: 30px 0;">
+                <h3>Definir Excursiones del Día</h3>
+                <div id="contenedorDefinicionesExcursion">
+                </div>
+                <button id="btnAnadirExcursion" style="margin-bottom: 20px; background-color: #fdc08e; color: black;">+ Añadir Excursión</button>
+                <hr style="border-top: 2px solid #fdc08e; margin: 30px 0;">
+
+                <div class="input-group" style="justify-content: center; margin-top:20px;">
+                    <button id="procesarTodasAusenciasBtn" style="background-color: #007bff; font-size:1.1em; padding:12px 20px;">Procesar Ausencias Definidas</button>
+                    <button id="limpiarResultadosBtn" class="btn-reset" style="background-color: #ffc107; color: black;">Limpiar Resultados</button>
+                </div>
+                <div id="resultadoSustitucion"></div>
+            </div>
+
+    <div class="seccion">
+                <h2>2. Sustituciones Asignadas</h2>
+                <div id="tablaSustitucionesAsignadasHoyContainer">
+                    </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button id="copiarTablaSustitucionesBtn" class="btn-copiar-tabla">Copiar Tabla como Imagen</button>
+                </div>
+            </div>
+
+            <div class="seccion">
+                <h2>3. Registro de Sustituciones</h2>
+                <div style="text-align: right; margin-bottom: 10px;">
+                    <button id="limpiarRegistroBtn" class="btn-reset">Limpiar Registro</button>
+                </div>
+                <div style="overflow-x:auto;">
+                <table id="tablaLogSustituciones">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Docente Ausente</th>
+                            <th>Profesor Sustituto</th>
+                            <th>Periodo (Día, Sesión, Hora)</th>
+                            <th>Asignatura/Tarea Sustituida</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logSustitucionesBody"></tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="horariosTab" class="tab-content">
+            <div class="io-buttons-container">
+                <button id="exportBtn" class="btn-export">Exportar Datos</button>
+                <label for="importFile" class="btn-import">Importar Datos</label>
+                <input type="file" id="importFile" style="display: none;" accept=".json">
+            </div>
+
+            <div class="seccion">
+                <h2>3. Gestión de Docentes</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px;">
+                    <div style="text-align: center; padding: 20px 0;">
+                        <button id="addDocenteBtn" class="btn-add-docente-modal-trigger">Añadir Nuevo Docente</button>
+                        <button id="resetSustitucionesDocentesBtn" class="btn-reset" style="margin-top: 15px;">Resetear Contadores de Sustituciones</button>
+                    </div>
+                    <div class="lista-docentes">
+                        <h3>Lista de Docentes (<span id="contadorDocentes">0</span>)</h3>
+                        <p style="font-size:0.8em; color:#666;">Utiliza los botones para editar o cambiar el orden de visualización.</p>
+                        <ul id="listaDocentes"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="seccion">
+                <h2>4. Editor de Horarios</h2>
+                <p>Haz clic en una celda para cambiar su estado (Libre &harr; Clase/Guardia). Las franjas "Exclusiva" y "Recreo" son editables para guardias.</p>
+                <div id="horariosContainer" class="horarios-container"></div>
+            </div>
+
+            <div class="seccion" style="text-align: center;">
+                 <button id="resetAppBtn" class="btn-reset">Borrar Todos los Datos</button>
+            </div>
+        </div>
+
+        <div id="historialTab" class="tab-content">
+            <div class="seccion">
+                <h2>Historial de Tablas de Sustitución</h2>
+                <div id="historialTablas"></div>
+            </div>
+        </div>
+
+    </div>
+    <button id="btnAplicarMultiple" class="btn-aplicar-multiple" style="display: none;">Aplicar a seleccionadas</button>
+
+    <!-- Modal para Gestión de Docentes -->
+    <div id="modalGestionDocente" class="modal-edicion" style="display:none;">
+        <div class="modal-contenido" style="max-width: 550px;">
+            <div class="modal-header">
+                <h3 id="modalDocenteTitulo">Añadir Docente</h3>
+                <button id="modalDocenteClose" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
+                <input type="hidden" id="docenteEditIndex">
+    
+                <div>
+                    <label for="docenteNombreInputModal">Nombre y Apellidos:</label>
+                    <input type="text" id="docenteNombreInputModal" placeholder="Nombre y Apellidos">
+                </div>
+    
+                <div>
+                    <label for="docenteCargoInputModal">Cargo (Ej: Tutor 3ºA, Apoyo Infantil, Maestro Música):</label>
+                    <input type="text" id="docenteCargoInputModal" placeholder="Cargo descriptivo">
+                </div>
+    
+                <div>
+                    <label style="margin-bottom: 5px;">Etapa Principal:</label>
+                    <div class="radio-group" style="gap: 20px;">
+                        <label><input type="radio" name="docenteEtapaModal" value="Primaria" checked> Primaria</label>
+                        <label><input type="radio" name="docenteEtapaModal" value="Infantil"> Infantil</label>
+                    </div>
+                </div>
+    
+                <div id="primariaOptionsModalContainer" style="padding-left:15px; border-left: 2px solid #eee; margin-top:5px; display:block;">
+                    <label for="docenteTipoSelectModal">Tipo Docente (Idioma - si es generalista de Primaria):</label>
+                    <select id="docenteTipoSelectModal">
+                        <option value="Castellano" selected>Castellano</option>
+                        <option value="Bilingue">Bilingüe</option>
+                    </select>
+                    <small>Nota: No aplica si abajo selecciona una especialidad (AL, PT, Religión).</small>
+                </div>
+    
+                <div id="infantilOptionsModalContainer" style="display:none; padding-left:15px; border-left: 2px solid #eee; margin-top:5px;">
+                    <label style="display: flex; align-items: center;">
+                        <input type="checkbox" id="docenteEsInglesInfantilCheckboxModal" style="margin-right: 8px;">
+                        ¿Es especialista en Inglés Infantil?
+                    </label>
+                    <small>Nota: No aplica si abajo selecciona una especialidad (AL, PT, Religión).</small>
+                </div>
+                
+                <hr style="width:100%; margin: 10px 0;">
+    
+                <div>
+                    <label for="docenteEspecialidadComunSelectModal">Especialidad Principal (anula opciones de idioma/inglés infantil si se elige una):</label>
+                    <select id="docenteEspecialidadComunSelectModal">
+                        <option value="" selected>Ninguna (Generalista/Tutor según etapa)</option>
+                        <option value="AL">AL (Audición y Lenguaje)</option>
+                        <option value="PT">PT (Pedagogía Terapéutica)</option>
+                        <option value="Religion">Religión</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-botones">
+                <button id="btnCancelarDocenteModal" class="btn-cancelar">Cancelar</button>
+                <button id="btnGuardarDocenteModal" class="btn-guardar">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <footer id="pageFooter">
+        <div class="footer-content">
+            <p class="footer-author">Creado por: David Cordón Dorado</p>
+            <img src="cc.png" alt="Licencia Creative Commons BY-NC-ND" id="ccLogoFooter" />
+            <p class="footer-version">v.3.1 (2025)</p>
+        </div>
+    </footer>
+    <script src="app.js" defer></script>
+</body>
+</html>
